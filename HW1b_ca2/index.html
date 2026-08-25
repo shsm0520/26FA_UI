@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My UI</title>
+    
+    <!-- The following line references an external css file -->
+    <!-- It defines style rules for your page, and elements in your page -->
+    <link href="css/style.css" rel="stylesheet">
+    
+</head>
+<body>
+
+    <header>
+        <h1>Journaling website Code Activity 1</h1>
+    </header>
+    <main>
+        <div class="summary">
+            <p>Average Sleep: <span id="avgsleep">0</span> hrs</p>
+            <p>Energetic days: <span id="energeticCount">0</span></p>
+            <p>Anxious days: <span id="anxiousCount">0</span></p>
+            <p>Motivated days: <span id="motivatedCount">0</span></p>   
+        </div>
+        <div class="layout">    
+           <article class="card">
+                <p>Username: A</p>
+                <p>2026-08-24 18:00</p>
+                <img src="https://picsum.photos/seed/picsum/200/300" alt="Image 1" width="300" height="200">
+                <blockquote>
+                Just do it!
+                </blockquote>
+                <div class="notes">
+                    <textarea id="notesinput" rows="4" cols="35" placeholder="Write your thoughts here..."></textarea>
+                </div>
+                <div class="sleeprecord"  >
+                    <p>Sleep Record: 7 hours</p>
+                    <input type="range" min="0" max="24" value="7" class="slider" id="sleeprange">
+                </div>
+                <ul class="mood">
+                    <li>
+                        <input type="checkbox" id="item1" name="moodselect" value="energetic">
+                        <label for="item1">energetic</label>
+
+                    </li>    
+                    <li>
+                        <input type="checkbox" id="item2" name="moodselect" value="anxious">
+                        <label for="item2">anxious</label>
+
+                    </li>    
+                    <li>
+
+                        <input type="checkbox" id="item3" name="moodselect" value="motivated" checked>
+                        <label for="item3">motivated</label>
+
+                    </li>
+                </ul>
+            </article>
+
+        </div>
+        
+    </main>
+
+    <footer>
+        <p> 2026 lee7su@uc.edu &copy;  All rights reserved.</p>
+    </footer>
+    
+    <!-- Load JS files -->
+    <script src="js/main.js"></script>
+</body>
+</html>
