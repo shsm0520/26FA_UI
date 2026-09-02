@@ -1,0 +1,8 @@
+services:
+  ui:
+    build: .
+    image: 26fa-ui:latest
+    container_name: 26fa-ui
+    ports:
+      - "8080:80"
+    restart: unless-stopped
