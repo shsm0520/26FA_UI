@@ -14,7 +14,7 @@ The root `/` page lists links to the deployed apps.
 ## Why `base: './'` is set
 
 Each app is deployed below a subpath such as `/project1/`, not at the domain root.
-Vite therefore needs relative asset paths.  Each app's `vite.config.js` includes:
+Vite therefore needs relative asset paths. Each app's `vite.config.js` includes:
 
 ```js
 base: './'
@@ -31,14 +31,23 @@ curl http://localhost:8080/project1/
 curl http://localhost:8080/hw2/
 ```
 
-## Jenkins flow
+## Jenkins privacy policy
 
-The included `Jenkinsfile` does:
+The real Jenkins pipeline is intentionally not committed as `Jenkinsfile`.
+
+Reason: the live pipeline may include SSH deployment steps, private repository
+references, registry endpoints, internal hostnames/IPs, and Jenkins credentials.
+Those details should remain inside Jenkins as a private Pipeline Script or be
+provided through Jenkins Credentials / job parameters.
+
+This repository only keeps `Jenkinsfile.example`, which is a public-safe example
+showing the intended build/deploy shape:
 
 1. Checkout
 2. `npm ci` and `npm run build` for every `*/package.json`
 3. Build the nginx Docker image
-4. Replace the running container
+4. Replace a local container on the Jenkins node
 5. Smoke test `/healthz`, `/project1/`, and `/hw2/`
 
-No private URLs, credentials, or server-specific SSH keys are committed.
+Do not commit private Jenkins scripts, SSH keys, server addresses, private repo
+URLs, registry passwords, or `.env` files.

@@ -1,3 +1,8 @@
+// Public-safe Jenkins pipeline example.
+//
+// Keep the real Jenkins Pipeline Script inside Jenkins when it contains SSH,
+// private repository URLs, internal hostnames/IPs, registry URLs, or credentials.
+// This example only documents the intended build shape for the repository.
 pipeline {
     agent any
 
@@ -14,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Verify apps') {
+        stage('Verify Svelte/Vite apps') {
             steps {
                 sh '''
                     set -eux
@@ -27,13 +32,13 @@ pipeline {
             }
         }
 
-        stage('Build image') {
+        stage('Build local Docker image') {
             steps {
                 sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest .'
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy locally on Jenkins node') {
             steps {
                 sh '''
                     set -eux
