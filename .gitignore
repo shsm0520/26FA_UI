@@ -1,0 +1,17 @@
+# Dependencies and build outputs
+node_modules/
+dist/
+.svelte-kit/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+
+# Keep the real Jenkins pipeline private when it contains SSH/internal details.
+Jenkinsfile
+Jenkinsfile.local
+Jenkinsfile.private
