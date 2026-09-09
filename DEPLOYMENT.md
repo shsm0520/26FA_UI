@@ -101,3 +101,19 @@ Required on the Jenkins/deploy nodes for the Compose pipeline:
 
 Install Node/npm on the Jenkins agent only if you intentionally keep a separate
 pre-Docker verification stage that runs `npm ci` directly on the host.
+
+
+## Smoke test readiness
+
+After `docker compose up -d`, Jenkins should retry `/healthz` for a short period
+instead of failing on the first request. Compose can report the container as
+started before nginx is fully ready to accept the first connection.
+
+If readiness still fails, check the deployment server with:
+
+```bash
+cd /opt/docker/26fa-ui
+docker compose ps
+docker logs 26fa-ui
+curl -v http://localhost:8081/healthz
+```

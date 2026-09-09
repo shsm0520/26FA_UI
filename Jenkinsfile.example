@@ -52,6 +52,24 @@ pipeline {
             steps {
                 sh '''
                     set -eux
+
+                    echo "Waiting for ${CONTAINER_NAME} on port ${APP_PORT}..."
+                    for i in $(seq 1 20); do
+                      if curl -fsS "http://localhost:${APP_PORT}/healthz"; then
+                        break
+                      fi
+
+                      if ! docker ps --format '{{.Names}}' | grep -qx "${CONTAINER_NAME}"; then
+                        echo "Container ${CONTAINER_NAME} is not running"
+                        docker compose ps || true
+                        docker logs "${CONTAINER_NAME}" || true
+                        exit 1
+                      fi
+
+                      echo "Not ready yet ($i/20); retrying..."
+                      sleep 2
+                    done
+
                     curl -fsS "http://localhost:${APP_PORT}/healthz"
                     curl -fsS "http://localhost:${APP_PORT}/project1/" | grep -i '<div id="app">'
                     curl -fsS "http://localhost:${APP_PORT}/hw2/" | grep -i '<div id="app">'
