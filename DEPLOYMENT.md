@@ -44,8 +44,8 @@ This repository only keeps `Jenkinsfile.example`, which is a public-safe example
 showing the intended build/deploy shape:
 
 1. Checkout
-2. `npm ci` and `npm run build` for every `*/package.json`
-3. Build the nginx Docker image
+2. Build the nginx Docker image with Compose
+3. The Dockerfile runs `npm ci` and `npm run build` for every `*/package.json` inside `node:alpine`
 4. Deploy/update the service with `docker compose up -d`
 5. Smoke test `/healthz`, `/project1/`, and `/hw2/`
 
@@ -84,3 +84,20 @@ The deployment path should use Compose (`docker compose pull/up`) rather than
 should update the service through the repo's `docker-compose.yml` so container
 name, port mapping, restart policy, and future service settings stay in one
 Compose file.
+
+
+## Jenkins agent requirements
+
+The Jenkins agent does not need local Node/npm for the default Compose image
+pipeline. The repository `Dockerfile` uses a `node:22-alpine` builder stage and
+runs each Svelte/Vite app build inside Docker.
+
+Required on the Jenkins/deploy nodes for the Compose pipeline:
+
+- `git`
+- `docker`
+- Docker Compose plugin (`docker compose`)
+- `curl` for smoke tests
+
+Install Node/npm on the Jenkins agent only if you intentionally keep a separate
+pre-Docker verification stage that runs `npm ci` directly on the host.

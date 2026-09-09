@@ -2,7 +2,8 @@
 //
 // Keep the real Jenkins Pipeline Script inside Jenkins when it contains SSH,
 // private repository URLs, internal hostnames/IPs, registry URLs, or credentials.
-// This example only documents the intended Compose-based build/deploy shape.
+// This example documents a Compose-first flow that does not require npm/node on
+// the Jenkins agent. The Dockerfile builds the Svelte/Vite apps inside node:alpine.
 pipeline {
     agent any
 
@@ -18,19 +19,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('Verify Svelte/Vite apps') {
-            steps {
-                sh '''
-                    set -eux
-                    for package_file in */package.json; do
-                      app="${package_file%/package.json}"
-                      npm ci --prefix "$app"
-                      npm run build --prefix "$app"
-                    done
-                '''
             }
         }
 
