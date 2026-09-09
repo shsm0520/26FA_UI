@@ -1,4 +1,8 @@
-<main class="hello-world">
-  <h1>Hello World</h1>
-  <p>Svelte + Vite setup is ready.</p>
+<script>
+  import SmartBackpack from './lib/SmartBackpack.svelte'
+</script>
+
+<main>
+  <h1>Project 1 Starter</h1>
+  <SmartBackpack />
 </main>
