@@ -5,11 +5,13 @@ its folder name.
 
 ## URL layout
 
-- `/project1/` serves `project1/dist`
-- `/hw2/` serves `hw2/dist`
+- `/HW1b_ca1/` serves the static `HW1b_ca1/index.html` folder
+- `/HW1b_ca2/` serves the static `HW1b_ca2/index.html` folder
+- `/project1/` serves the built Svelte/Vite `project1/dist` folder
+- `/hw2/` serves the built Svelte/Vite `hw2/dist` folder
 - `/healthz` returns `ok` for smoke checks
 
-The root `/` page lists links to the deployed apps.
+The root `/` page is generated during the Docker build and lists every deployed top-level folder.
 
 ## Why `base: './'` is set
 
@@ -45,7 +47,7 @@ showing the intended build/deploy shape:
 
 1. Checkout
 2. Build the nginx Docker image with Compose
-3. The Dockerfile runs `npm ci` and `npm run build` for every `*/package.json` inside `node:alpine`
+3. The Dockerfile runs `npm ci` and `npm run build` for every `*/package.json` inside `node:alpine`, and copies plain static folders that contain `index.html`
 4. Deploy/update the service with `docker compose up -d`
 5. Smoke test `/healthz`, `/project1/`, and `/hw2/`
 
@@ -117,3 +119,18 @@ docker compose ps
 docker logs 26fa-ui
 curl -v http://localhost:8081/healthz
 ```
+
+
+## Folder deployment behavior
+
+During the Docker build, each top-level folder is handled as follows:
+
+- If the folder has `package.json`, it is treated as a Svelte/Vite app. Jenkins
+  does not need Node/npm on the host; the Dockerfile builds the app inside the
+  `node:22-alpine` builder stage and copies its `dist` output to `/folder-name/`.
+- If the folder has `index.html` but no `package.json`, it is treated as a plain
+  static folder and copied directly to `/folder-name/`.
+- Other folders are skipped.
+
+This keeps old static homework folders such as `HW1b_ca1` and `HW1b_ca2`
+accessible while still deploying Svelte folders as compiled Svelte/Vite output.

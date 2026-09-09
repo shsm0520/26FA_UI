@@ -3,7 +3,8 @@
 // Keep the real Jenkins Pipeline Script inside Jenkins when it contains SSH,
 // private repository URLs, internal hostnames/IPs, registry URLs, or credentials.
 // This example documents a Compose-first flow that does not require npm/node on
-// the Jenkins agent. The Dockerfile builds the Svelte/Vite apps inside node:alpine.
+// the Jenkins agent. The Dockerfile builds Svelte/Vite folders inside
+// node:alpine and copies plain static folders with index.html.
 pipeline {
     agent any
 
@@ -26,11 +27,7 @@ pipeline {
             steps {
                 sh '''
                     set -eux
-                    FULL_IMAGE="${FULL_IMAGE}" \
-                    IMAGE_TAG="${IMAGE_TAG}" \
-                    CONTAINER_NAME="${CONTAINER_NAME}" \
-                    APP_PORT="${APP_PORT}" \
-                    docker compose build
+                    FULL_IMAGE="${FULL_IMAGE}" IMAGE_TAG="${IMAGE_TAG}" CONTAINER_NAME="${CONTAINER_NAME}" APP_PORT="${APP_PORT}" docker compose build
                 '''
             }
         }
@@ -39,11 +36,7 @@ pipeline {
             steps {
                 sh '''
                     set -eux
-                    FULL_IMAGE="${FULL_IMAGE}" \
-                    IMAGE_TAG="${IMAGE_TAG}" \
-                    CONTAINER_NAME="${CONTAINER_NAME}" \
-                    APP_PORT="${APP_PORT}" \
-                    docker compose up -d
+                    FULL_IMAGE="${FULL_IMAGE}" IMAGE_TAG="${IMAGE_TAG}" CONTAINER_NAME="${CONTAINER_NAME}" APP_PORT="${APP_PORT}" docker compose up -d
                 '''
             }
         }
@@ -71,6 +64,8 @@ pipeline {
                     done
 
                     curl -fsS "http://localhost:${APP_PORT}/healthz"
+                    curl -fsS "http://localhost:${APP_PORT}/HW1b_ca1/" | grep -i '<html'
+                    curl -fsS "http://localhost:${APP_PORT}/HW1b_ca2/" | grep -i '<html'
                     curl -fsS "http://localhost:${APP_PORT}/project1/" | grep -i '<div id="app">'
                     curl -fsS "http://localhost:${APP_PORT}/hw2/" | grep -i '<div id="app">'
                 '''
