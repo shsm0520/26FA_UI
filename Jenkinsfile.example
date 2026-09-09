@@ -2,14 +2,16 @@
 //
 // Keep the real Jenkins Pipeline Script inside Jenkins when it contains SSH,
 // private repository URLs, internal hostnames/IPs, registry URLs, or credentials.
-// This example only documents the intended build shape for the repository.
+// This example only documents the intended Compose-based build/deploy shape.
 pipeline {
     agent any
 
     environment {
         IMAGE_NAME = '26fa-ui'
         CONTAINER_NAME = '26fa-ui'
-        HOST_PORT = '8080'
+        APP_PORT = '8080'
+        IMAGE_TAG = "${BUILD_NUMBER}"
+        FULL_IMAGE = "${IMAGE_NAME}"
     }
 
     stages {
@@ -32,18 +34,28 @@ pipeline {
             }
         }
 
-        stage('Build local Docker image') {
-            steps {
-                sh 'docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest .'
-            }
-        }
-
-        stage('Deploy locally on Jenkins node') {
+        stage('Build image with Compose') {
             steps {
                 sh '''
                     set -eux
-                    docker rm -f "${CONTAINER_NAME}" || true
-                    docker run -d                       --name "${CONTAINER_NAME}"                       --restart unless-stopped                       -p "${HOST_PORT}:80"                       "${IMAGE_NAME}:latest"
+                    FULL_IMAGE="${FULL_IMAGE}" \
+                    IMAGE_TAG="${IMAGE_TAG}" \
+                    CONTAINER_NAME="${CONTAINER_NAME}" \
+                    APP_PORT="${APP_PORT}" \
+                    docker compose build
+                '''
+            }
+        }
+
+        stage('Deploy with Compose') {
+            steps {
+                sh '''
+                    set -eux
+                    FULL_IMAGE="${FULL_IMAGE}" \
+                    IMAGE_TAG="${IMAGE_TAG}" \
+                    CONTAINER_NAME="${CONTAINER_NAME}" \
+                    APP_PORT="${APP_PORT}" \
+                    docker compose up -d
                 '''
             }
         }
@@ -52,9 +64,9 @@ pipeline {
             steps {
                 sh '''
                     set -eux
-                    curl -fsS "http://localhost:${HOST_PORT}/healthz"
-                    curl -fsS "http://localhost:${HOST_PORT}/project1/" | grep -i '<div id="app">'
-                    curl -fsS "http://localhost:${HOST_PORT}/hw2/" | grep -i '<div id="app">'
+                    curl -fsS "http://localhost:${APP_PORT}/healthz"
+                    curl -fsS "http://localhost:${APP_PORT}/project1/" | grep -i '<div id="app">'
+                    curl -fsS "http://localhost:${APP_PORT}/hw2/" | grep -i '<div id="app">'
                 '''
             }
         }

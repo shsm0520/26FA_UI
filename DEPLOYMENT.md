@@ -46,7 +46,7 @@ showing the intended build/deploy shape:
 1. Checkout
 2. `npm ci` and `npm run build` for every `*/package.json`
 3. Build the nginx Docker image
-4. Replace a local container on the Jenkins node
+4. Deploy/update the service with `docker compose up -d`
 5. Smoke test `/healthz`, `/project1/`, and `/hw2/`
 
 Do not commit private Jenkins scripts, SSH keys, server addresses, private repo
@@ -59,9 +59,28 @@ URLs, registry passwords, or `.env` files.
 variables while still keeping local defaults:
 
 ```bash
-FULL_IMAGE=reg.example.com/library/26fa-ui IMAGE_TAG=123 CONTAINER_NAME=26fa-ui APP_PORT=8080 docker compose up -d
+FULL_IMAGE=reg.example.com/library/26fa-ui \
+IMAGE_TAG=123 \
+CONTAINER_NAME=26fa-ui \
+APP_PORT=8080 \
+docker compose pull
+
+FULL_IMAGE=reg.example.com/library/26fa-ui \
+IMAGE_TAG=123 \
+CONTAINER_NAME=26fa-ui \
+APP_PORT=8080 \
+docker compose up -d
 ```
 
 This allows the private Jenkins Pipeline Script to build and push a tagged image,
 then deploy the same image on the server without committing private registry or
 SSH details to the repository.
+
+
+## Compose-first deployment
+
+The deployment path should use Compose (`docker compose pull/up`) rather than
+`docker run`. Jenkins may build and push the image, but the deployment server
+should update the service through the repo's `docker-compose.yml` so container
+name, port mapping, restart policy, and future service settings stay in one
+Compose file.
