@@ -51,3 +51,17 @@ showing the intended build/deploy shape:
 
 Do not commit private Jenkins scripts, SSH keys, server addresses, private repo
 URLs, registry passwords, or `.env` files.
+
+
+## Remote image deployment variables
+
+`docker-compose.yml` supports Jenkins/Harbor deployment through environment
+variables while still keeping local defaults:
+
+```bash
+FULL_IMAGE=reg.example.com/library/26fa-ui IMAGE_TAG=123 CONTAINER_NAME=26fa-ui APP_PORT=8080 docker compose up -d
+```
+
+This allows the private Jenkins Pipeline Script to build and push a tagged image,
+then deploy the same image on the server without committing private registry or
+SSH details to the repository.
