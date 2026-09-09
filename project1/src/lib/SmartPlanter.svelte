@@ -24,19 +24,16 @@
 </script>
 
 <div class="project-layout">
-  <section class="device-ui">
+  <section>
     <h2>Device UI</h2>
-    <p class="object-label">Smart Planter Display</p>
+    <p>Object: Smart Planter</p>
+    <p>UI location: small display on the front of the planter</p>
 
-    <div class="planter-graphic">
-      <div class="plant">🌱</div>
-      <div class="screen">
-        <p>Water: {waterLevel}%</p>
-        <p>Soil: {soilMoisture}%</p>
-        <p>Light: {lightOn ? 'On' : 'Off'}</p>
-        <p>Food: {plantFood ? 'Added' : 'Needed'}</p>
-      </div>
-    </div>
+    <h3>Display</h3>
+    <p>Water Level: {waterLevel}%</p>
+    <p>Soil Moisture: {soilMoisture}%</p>
+    <p>Grow Light: {lightOn ? 'On' : 'Off'}</p>
+    <p>Plant Food: {plantFood ? 'Added' : 'Needed'}</p>
 
     <h3>Controls and Indicators</h3>
     <ul>
@@ -47,7 +44,7 @@
     </ul>
   </section>
 
-  <section class="testing-ui">
+  <section>
     <h2>Testing UI</h2>
     <p><strong>Project:</strong> Smart Planter UI</p>
     <p><strong>Name:</strong> Seunghyeon Ham</p>
@@ -60,14 +57,12 @@
     <button on:click={() => (infoVisible = !infoVisible)}>Info</button>
 
     {#if infoVisible}
-      <div class="info-box">
-        <p>
-          Use these buttons to simulate a smart planter. Water Plant lowers the
-          stored water level and raises soil moisture. The grow light button
-          changes the light status. Add Plant Food updates the nutrient indicator.
-          Simulate Dry Soil lowers the soil moisture value.
-        </p>
-      </div>
+      <p>
+        Use these buttons to simulate a smart planter. Water Plant lowers the
+        stored water level and raises soil moisture. The grow light button
+        changes the light status. Add Plant Food updates the nutrient indicator.
+        Simulate Dry Soil lowers the soil moisture value.
+      </p>
     {/if}
   </section>
 </div>

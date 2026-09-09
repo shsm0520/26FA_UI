@@ -6,7 +6,7 @@ body {
 }
 
 main {
-  max-width: 1000px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 24px;
 }
@@ -17,52 +17,13 @@ main {
   gap: 24px;
 }
 
-.device-ui,
-.testing-ui {
+section {
   border: 1px solid #ccc;
   padding: 16px;
-}
-
-.object-label {
-  font-weight: bold;
-}
-
-.planter-graphic {
-  width: 240px;
-  margin-bottom: 16px;
-  padding: 16px;
-  border: 3px solid #654321;
-  background: #f2e3c6;
-  text-align: center;
-}
-
-.plant {
-  font-size: 56px;
-  margin-bottom: 8px;
-}
-
-.screen {
-  padding: 12px;
-  border: 2px solid #333;
-  background: #111;
-  color: #8cff8c;
-  font-family: monospace;
-  text-align: left;
-}
-
-.screen p {
-  margin: 4px 0;
 }
 
 button {
   display: block;
   margin: 8px 0;
   padding: 8px 12px;
-}
-
-.info-box {
-  margin-top: 12px;
-  padding: 10px;
-  border: 1px solid #999;
-  background: #f5f5f5;
 }
