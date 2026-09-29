@@ -1,8 +1,8 @@
 services:
   ui:
     build: .
-    image: 26fa-ui:latest
-    container_name: 26fa-ui
+    image: ${FULL_IMAGE:-26fa-ui}:${IMAGE_TAG:-latest}
+    container_name: ${CONTAINER_NAME:-26fa-ui}
     ports:
-      - "8080:80"
+      - "${APP_PORT:-8080}:80"
     restart: unless-stopped
