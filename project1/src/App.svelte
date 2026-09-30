@@ -22,9 +22,9 @@
         <h2 id="document-title">Project Sketch</h2>
         <a href={sketchUrl} target="_blank" rel="noreferrer">Open PDF ↗</a>
       </div>
-      <object class="sketch-preview" data={sketchUrl} type="application/pdf" aria-label="Project 1 sketch PDF">
+        <object class="sketch-preview" data={sketchUrl} type="application/pdf" aria-label="Project 1 sketch PDF">
         <p>Preview unavailable. <a href={sketchUrl} target="_blank" rel="noreferrer">Open the sketch PDF</a>.</p>
-      </object>
+        </object>
     </section>
   {/if}
 </main>
