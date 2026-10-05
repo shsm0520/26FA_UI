@@ -19,8 +19,8 @@
 </script>
 <div class="drawing">
       <svg viewBox="0 0 640 620" role="group" aria-labelledby="planter-title planter-desc">
-        <title id="planter-title">높이 조절 컵이 있는 스마트 화분 단면도</title>
-        <desc id="planter-desc">화분 외벽 일부를 잘라 흙을 담는 안쪽 컵, 센서, LED와 아래 물탱크를 보여줍니다. 현재 컵 높이는 조절 범위의 {cupHeight}퍼센트입니다.</desc>
+<title id="Smart Plant Pot with Height-Adjusting Cup Cross-Section">Smart Plant Pot with Height-Adjusting Cup Cross-Section</title>
+        <desc id="planter-desc">Cuts are made to the outer wall of the pot to reveal the inner cup for the soil, the sensor, the LED, and the water tank below. The current cup height is {cupHeight} percent of the adjustment range. End of explanation </desc>
         <defs>
           <linearGradient id="shell" x1="0" x2="1"><stop stop-color="#e2e8df"/><stop offset=".5" stop-color="#fafbf6"/><stop offset="1" stop-color="#b6c7b9"/></linearGradient>
           <linearGradient id="cup" x1="0" x2="1"><stop stop-color="#8eac8b"/><stop offset=".45" stop-color="#d5e2bd"/><stop offset="1" stop-color="#9ab695"/></linearGradient>
