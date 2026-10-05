@@ -8,15 +8,17 @@
   export let elapsedHours = 0
   export let podControlsVisible = false
   export let autoCare = false
+  export let ledEnabled = true
+  export let buttonLedEnabled = true
   export let maintenanceMode = false
   export let paired = false
-  export let onResumeCare = () => {}
+  export let onToggleMaintenance = () => {}
+  export let onToggleAutoCare = () => {}
   let waterAlerts = true
   let moistureAlerts = true
   let notification = ''
   let wasEmpty = false
   let wasDry = false
-  let previousHeight = 100
   $: paired = devices.length > 0
   $: updateAlerts(paired, waterLevel, soilMoisture, targetSoilMoisture, waterAlerts, moistureAlerts)
   function updateAlerts(connected, water, soil, target, notifyWater, notifySoil) {
@@ -31,11 +33,9 @@
     wasDry = dry
   }
   function toggleMaintenance() {
-    maintenanceMode = !maintenanceMode
-    if (maintenanceMode) { previousHeight = cupHeight; cupHeight = 100 }
-    else { cupHeight = previousHeight; onResumeCare() }
+    onToggleMaintenance()
   }
-  function toggleAutoCare() { autoCare = !autoCare; if (autoCare && !maintenanceMode) onResumeCare() }
+  function toggleAutoCare() { onToggleAutoCare() }
   let devices = []
   let activeId = null
   let nextId = 1
@@ -132,6 +132,8 @@
     navigate('dashboard')
   }
   function reset() {
+    ledEnabled = true
+    buttonLedEnabled = true
     autoCare = false
     maintenanceMode = false
     waterAlerts = true
@@ -168,7 +170,6 @@
 <svelte:window onkeydown={confirmationKey} />
 
 <div class="screen" inert={resetOpen}>
-  <div class="connection"><span class:connected={!!selected}></span>{selected ? `${selected.name} · Connected` : 'Your smart planter'}<small>DEMO</small></div>
 
   {#if stage === 'home'}
     <span class="eyebrow">MY GREEN SPACE</span>
@@ -232,6 +233,12 @@
     <label for="phone-target">Target soil moisture · {targetSoilMoisture}%</label>
     <input id="phone-target" type="range" min="0" max="100" step="1" bind:value={targetSoilMoisture}/>
     <div class="preferences">
+      <strong>Planter lighting</strong>
+      <label class="toggle-row"><span>Rim LED</span><input type="checkbox" role="switch" bind:checked={ledEnabled}/></label>
+      <label class="toggle-row"><span>Button LEDs</span><input type="checkbox" role="switch" bind:checked={buttonLedEnabled}/></label>
+      <p class="hint">Control rim and side-button lighting independently, including maintenance blinking. Buttons still work with their lights off.</p>
+    </div>
+    <div class="preferences">
       <strong>Notifications</strong>
       <label class="toggle-row"><span>Empty water tank</span><input type="checkbox" bind:checked={waterAlerts}/></label>
       <label class="toggle-row"><span>Low soil moisture</span><input type="checkbox" bind:checked={moistureAlerts}/></label>
@@ -291,10 +298,6 @@
 
 <style>
   .screen { position: absolute; inset: 58px 0 26px; padding: 18px 24px 24px; overflow-y: auto; scrollbar-width: thin; color: #2c4135; }
-  .connection { display: flex; align-items: center; gap: 7px; font-size: 11px; margin-bottom: 28px; color: #69756b; }
-  .connection > span { width: 7px; height: 7px; background: #9ca497; border-radius: 50%; }
-  .connection > span.connected { background: #388454; }
-  .connection small { margin-left: auto; font-size: 9px; letter-spacing: 1px; }
   .eyebrow { font-size: 10px; letter-spacing: 1.6px; color: #788574; font-weight: bold; }
   h3 { margin: 10px 0; font-size: 27px; line-height: 1.25; letter-spacing: -.7px; }
   h3:focus { outline: none; }
