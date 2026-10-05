@@ -3,6 +3,11 @@ node_modules/
 dist/
 .svelte-kit/
 
+# Generated from the root icon2.png by Vite configuration.
+/*/public/icon2.png
+/*/public/favicon.png
+/*/public/icon.png
+
 # Local environment / secrets
 .env
 .env.*

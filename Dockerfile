@@ -10,7 +10,10 @@ COPY . .
 
 RUN set -eux; \
     mkdir -p /site; \
-    printf '%s\n' '<!doctype html><html><head><meta charset="utf-8"><title>26FA UI</title></head><body><h1>26FA UI</h1><ul>' > /site/index.html; \
+    cp icon2.png /site/icon2.png; \
+    cp icon2.png /site/favicon.png; \
+    cp icon2.png /site/icon.png; \
+    printf '%s\n' '<!doctype html><html><head><meta charset="utf-8"><link rel="icon" type="image/png" href="/favicon.png"><title>26FA UI</title></head><body><h1>26FA UI</h1><ul>' > /site/index.html; \
     for dir in */; do \
       app="${dir%/}"; \
       if [ "$app" = "node_modules" ] || [ "$app" = "dist" ]; then \
