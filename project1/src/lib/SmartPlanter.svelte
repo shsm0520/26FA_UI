@@ -1,5 +1,11 @@
 <script>
   import { onMount } from 'svelte'
+  const clockFormatter = new Intl.DateTimeFormat(undefined, { hour: 'numeric', minute: '2-digit', hour12: false })
+  let currentTime = clockFormatter.format(new Date())
+  onMount(() => {
+    const clockTimer = setInterval(() => { currentTime = clockFormatter.format(new Date()) }, 1000)
+    return () => clearInterval(clockTimer)
+  })
   export let active = true
   let playing = false
   let stepping = false
@@ -82,7 +88,7 @@
     <span class="eyebrow">02 / DEVICE UI</span>
     <h2 id="phone-title">Mobile Screen</h2>
     <div class="phone-frame">
-      <div class="phone-status" aria-hidden="true"><span>9:41</span><span>▰</span></div>
+      <div class="phone-status"><span aria-label="Current time">{currentTime}</span><svg class="battery-icon" viewBox="0 0 28 14" role="img" aria-label="Battery icon (mock)"><rect x="1" y="1" width="23" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3.5" y="3.5" width="18" height="7" rx=".5" fill="currentColor"/><rect x="25.5" y="4" width="2" height="6" rx=".7" fill="currentColor"/></svg></div>
       <div class="phone-island" aria-hidden="true"></div>
       <PlanterPhone bind:buttonLedEnabled bind:ledEnabled bind:autoCare bind:maintenanceMode bind:paired onToggleMaintenance={toggleMaintenance} onToggleAutoCare={toggleAutoCare} bind:targetSoilMoisture bind:waterLevel bind:soilMoisture bind:cupHeight bind:currentTemperature bind:elapsedHours bind:podControlsVisible>
         <dl class="readings" aria-live="polite">
@@ -141,6 +147,8 @@ h2 { margin: 12px 0; font-size: 22px; color: #2c4135; }
 .phone-panel { padding: 20px 0 0; border: 0; }
 .phone-frame { width: 100%; aspect-ratio: 393 / 852; box-sizing: border-box; border: 9px solid #252725; border-radius: 52px; position: relative; background: #f7f9f3; box-shadow: 0 12px 30px #243e3014; overflow: hidden; }
 .phone-status { display: flex; justify-content: space-between; padding: 17px 25px; font-size: 13px; font-weight: bold; }
+.phone-status { align-items: center; font-variant-numeric: tabular-nums; }
+.battery-icon { width: 26px; height: 13px; }
 .phone-island { position: absolute; width: 112px; height: 30px; border-radius: 20px; top: 10px; left: 50%; transform: translateX(-50%); background: #252725; }
 .readings { margin: 0; }
 .readings div { display: flex; gap: 10px; justify-content: space-between; padding: 19px 0; border-bottom: 1px solid #e0e5dc; font-size: 14px; }

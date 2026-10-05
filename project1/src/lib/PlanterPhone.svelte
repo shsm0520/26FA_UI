@@ -251,25 +251,25 @@
     <div class="indicators" aria-label="Planter indicators">
       <div class="indicator" class:alert-state={waterLevel === 0}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C10 7 5 11 5 15a7 7 0 0 0 14 0c0-4-5-8-7-12Z"/><path d="M8 15a4 4 0 0 0 4 4"/></svg>
-        <strong>{waterLevel}%</strong><span>Water Level</span>
+        <strong>{waterLevel}%</strong><span class="indheader">Water Level</span>
       </div>
       <div class="indicator bounded-indicator" class:alert-state={soilMoisture < targetSoilMoisture * 0.5}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c-2 3-5 6-5 9a5 5 0 0 0 10 0c0-3-3-6-5-9ZM3 19h18M5 22h14"/></svg>
         <small class="upper-limit">Max {Math.min(100, Number(targetSoilMoisture) + 10)}%</small>
         <strong>{soilMoisture}%</strong>
         <small class="lower-limit">Min {Math.max(0, Number(targetSoilMoisture) - 10)}%</small>
-        <span>Soil Moisture</span>
+        <span class="indheader">Soil Moisture</span>
       </div>
       <div class="indicator">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14V5a3 3 0 0 1 6 0v9a5 5 0 1 1-6 0Z"/><path d="M12 8v10M17 6h3M17 10h2"/></svg>
         <small class="upper-limit">Max 28°C</small>
         <strong>{currentTemperature}°C</strong>
         <small class="lower-limit">Min 18°C</small>
-        <span>Temperature</span>
+        <span class="indheader">Temperature</span>
       </div>
       <div class="indicator">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V11M12 15C4 16 3 11 3 7c6 0 9 2 9 8ZM12 11C12 5 16 3 21 3c0 5-3 9-9 8Z"/></svg>
-        <strong>Needed</strong><span>Plant Food</span>
+        <strong>Needed</strong><span class="indheader">Plant Food</span>
       </div>
     </div>
     <p class="range-note">Demo ranges: soil target ±10%; temperature 18–28°C.</p>
@@ -355,7 +355,7 @@
   .indicator .upper-limit { grid-row: 2; }
   .indicator strong { grid-row: 3; }
   .indicator .lower-limit { grid-row: 4; }
-  .indicator span { grid-row: 5; }
+  .indicator span { grid-row: 5; margin-top: 6px; }
   .upper-limit, .lower-limit { font-size: 9px; color: #687661; white-space: nowrap; }
   .range-note { font-size: 10px; margin: 0 0 12px; color: #788574; }
   .indicator.alert-state { background: #fff0ed; border-color: #e5a69f; }
@@ -364,7 +364,9 @@
   .indicator.alert-state span, .alert-state .upper-limit, .alert-state .lower-limit { color: #96504d; }
   .indicator svg { width: 24px; height: 24px; fill: none; stroke: #527451; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
   .indicator strong { font-size: 13px; font-variant-numeric: tabular-nums; }
+  .indicator .indheader { font-size: 11px; color: #354139; font-weight: bold;}
   .indicator span { font-size: 9px; color: #687661; line-height: 1.4; }
+
   .status-details { border-bottom: 1px solid #d9dfd3; padding-bottom: 12px; }
   .status-details summary { cursor: pointer; color: #355d40; font-size: 12px; padding: 8px 0; }
   .care-controls button strong { float: right; }
