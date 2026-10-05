@@ -77,7 +77,6 @@
     <h2 id="concept-title">Smart Planter</h2>
     <p class="description">Cross-section showing the internal structure and height-adjustable cup.</p>
     <PlanterModel {buttonLedEnabled} {ledEnabled} {cupHeight} {waterLevel} {soilMoisture} {targetSoilMoisture} {maintenanceMode} {autoCare} onMaintenance={toggleMaintenance} onAdjustHeight={toggleAutoCare} />
-    <p class="description">The outer wall and water tank are fixed, while the inner cup moves. The supports are a conceptual structure to explain the mechanism.</p>
   </section>
   <section class="phone-panel" aria-labelledby="phone-title">
     <span class="eyebrow">02 / DEVICE UI</span>
@@ -98,12 +97,10 @@
     <button class="info-button" onclick={() => infoDialog.showModal()} aria-haspopup="dialog" aria-controls="simulation-info">ⓘ Info</button>
     <span class="eyebrow">03 / CONTROLS</span>
     <h2 id="controls-title">Controls</h2>
-    <p class="description">Use the buttons to change the state and view it on the screen.</p>
     <div class="height-control">
       <div class="height-heading"><label for="target-moisture">Set Target Soil Moisture</label><output for="target-moisture">{targetSoilMoisture}%</output></div>
       <input id="target-moisture" type="range" min="0" max="100" step="1" bind:value={targetSoilMoisture} />
-      <p class="description">Set the target, then press the Check Water Level button below. The lower the target, the higher the cup moves.</p>
-    </div>
+      </div>
     <div class="action-buttons">
       <button onclick={waterPlant} disabled={filling}>{filling ? 'Filling water…' : 'Water Plant'}</button>
       <div class="time-controls">
@@ -113,9 +110,10 @@
       <button onclick={checkWaterAndMovePod} disabled={maintenanceMode || filling} aria-controls="pod-controls">Check Water Level and Move Inner Pod</button>
     </div>
     <p class="description" aria-live="polite">Elapsed time: {elapsedHours} hours · Water level: {waterLevel}%</p>
-    <p class="description">Watering: Fills water level to 100% and automatically moves the cup · Every 2 seconds simulates 1 hour: water −8%, soil moisture −5%. Water fills gradually. Playback pauses while refilling and resumes afterward if it was running.</p>
     <dialog bind:this={infoDialog} id="simulation-info" class="info-dialog" aria-labelledby="info-title">
         <div class="info-header"><h3 id="info-title">How to test the planter</h3><button onclick={() => infoDialog.close()} aria-label="Close information">×</button></div>
+        <p class="description"><strong>Concept view:</strong> the outer wall and water tank stay fixed while the inner pod moves. The support illustrates the mechanism.</p>
+        <p class="description"><strong>Target Soil Moisture:</strong> set the slider, then check the water level to apply it. Lower targets move the pod higher.</p>
         <p class="description"><strong>Water Plant:</strong> gradually fills the tank to 100%, then adjusts the pod to the target moisture. Continuous playback resumes after filling if it was running; paused playback stays paused.</p>
         <p class="description"><strong>Advance Time:</strong> runs one simulated hour. Play repeats hours; Pause freezes time. Each hour takes 2 seconds and consumes 8% water and 5% soil moisture.</p>
         <p class="description"><strong>Check Water Level:</strong> moves the pod and applies the moisture target. With no water, moisture drops by 10% instead.</p>
@@ -127,7 +125,7 @@
       <div class="height-control" id="pod-controls">
         <p class="water-reading" aria-live="polite">Water Level <strong>{waterLevel}%</strong></p>
         <div class="height-heading"><span>Inner Pod Height</span><output>{cupHeight}%</output></div>
-        <p class="description" role="status">{waterLevel === 0 ? 'Out of water. Pressing the Check Water Level button will decrease Soil Moisture by 10%.' : 'Pressing the Check Water Level button moves the cup and sets Soil Moisture to the target.'}</p>
+        <p class="description" role="status">{waterLevel === 0 ? 'Out of water' : maintenanceMode ? 'Maintenance mode active' : 'Pod position updated'}</p>
       </div>
     {/if}
     <div class="project-info"><p>Seunghun Lee · Smart Planter UI</p><a href="https://github.com/shsm0520/26FA_UI" target="_blank" rel="noreferrer">Project codebase ↗</a></div>

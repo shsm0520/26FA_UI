@@ -283,7 +283,6 @@
       <button aria-pressed={maintenanceMode} onclick={toggleMaintenance}>{maintenanceMode ? 'Finish maintenance' : 'Maintenance mode'}</button>
       <p class="hint">{maintenanceMode ? 'Pod held at maximum height for refilling or cleaning.' : 'Raises the pod to maximum height and holds it there.'}</p>
     </div>
-    <p class="hint">The concept view and Controls follow this planter.</p>
   {/if}
 </div>
 {#if resetOpen}
