@@ -1,8 +1,11 @@
 <script>
   export let cupHeight = 45
-  export let waterLevel = 65
-  // Cup bottom (y=425) meets the water surface (492 - level * 0.86).
-  $: lift = Number(cupHeight) * 0.86 - 67
+  export let waterLevel = 100
+  export let soilMoisture = 42
+  export let targetSoilMoisture = 100
+  $: ledAlert = soilMoisture < targetSoilMoisture * 0.5 || waterLevel === 0
+  // Let the curved pod bottom dip beneath the surface at its checked position.
+  $: lift = Number(cupHeight) * 0.86 - 19
   $: waterY = 492 - waterLevel * 0.86
 </script>
 <div class="drawing">
@@ -23,12 +26,14 @@
         <ellipse cx="307" cy="220" rx="151" ry="42" fill="#c6d3c2" stroke="#92a58e"/>
 
         
-        <path d="M163 218 C207 169 406 169 451 218" fill="none" stroke="#d2a2ca" stroke-width="8"/>
-        <path d="M163 218 C207 169 406 169 451 218" fill="none" stroke="#fae2f5" stroke-width="3"/>
+        <g class="led-indicator" role="img" aria-label={`LED Indicator: ${ledAlert ? 'Red' : 'Blue'}`}>
+          <path d="M151 198 C195 148 419 148 463 198" fill="none" stroke={ledAlert ? '#dc303f' : '#2679ee'} stroke-width="9" stroke-linecap="round"/>
+          <path d="M151 198 C195 148 419 148 463 198" fill="none" stroke={ledAlert ? '#ffb0b6' : '#a9d8ff'} stroke-width="3" stroke-linecap="round"/>
+        </g>
 
         <!-- Fixed guide rails and a conceptual telescoping support. -->
         <path d="M286 472V384h42v88" fill="#b6c4b9" stroke="#6b8272" stroke-width="2"/>
-        <rect x="296" y={399 - lift} width="22" height={74 + lift} rx="5" fill="#e5ebe4" stroke="#6b8272" stroke-width="2"/>
+        <rect class="pod-support" x="296" y={449 - lift} width="22" height={24 + lift} rx="5" fill="#e5ebe4" stroke="#6b8272" stroke-width="2"/>
 
 
 
@@ -41,7 +46,7 @@
           </g>
         {/if}
         
-        <g transform={`translate(0, ${-lift})`}>
+        <g class="inner-pod" style={`transform: translateY(${-lift}px)`}>
           <path d="M204 314 L220 454 Q307 497 394 454 L410 314Z" fill="url(#cup)" stroke="#526d53" stroke-width="2"/>
           <ellipse cx="307" cy="314" rx="103" ry="34" fill="#e0e9cc" stroke="#526d53" stroke-width="2"/>
           <ellipse cx="307" cy="314" rx="92" ry="26" fill="url(#soil)"/>
@@ -59,9 +64,16 @@
           <text x="477" y="260" class="label">soil sensor</text>
         </g>
         
+        <!-- A translucent front surface makes the submerged pod remain visible. -->
+        {#if waterLevel > 0}
+          <g class="water-front" pointer-events="none">
+            <path d={`M182 ${waterY}Q307 ${waterY + 50} 432 ${waterY}L432 492Q307 542 182 492Z`} fill="#70bfd4" fill-opacity="0.35"/>
+            <path d={`M182 ${waterY}Q307 ${waterY + 50} 432 ${waterY}`} fill="none" stroke="#e3fbff" stroke-width="3"/>
+          </g>
+        {/if}
         <!-- Narrow front edges describe the removed wall section. -->
         <path d="M169 484Q307 557 445 484L442 506Q307 575 172 506Z" fill="url(#shell)" stroke="#6b8272" stroke-width="2"/>
-        <path d="M170 207L132 172H86" class="leader"/><text x="84" y="159" class="label">LED Indicater</text>
+        <path d="M170 183L132 150H56" class="leader"/><text x="54" y="136" class="label">LED Indicator</text>
         <path d="M442 349H485L503 363H550" class="leader"/><text x="478" y="386" class="label">Half cut view</text>
         <path d="M400 477H476L494 465H550" class="leader"/><text x="478" y="452" class="label">Water reserver</text>
         <text x="307" y="596" text-anchor="middle" class="caption">CUTAWAY VIEW / SVG CONCEPT</text>
@@ -69,6 +81,9 @@
 </div>
 <style>
 .drawing { background: radial-gradient(ellipse at center, #eef2e7, #fcfcf7 70%); border-radius: 12px; }
+.inner-pod { transition: transform 800ms ease-in-out; }
+.pod-support { transition: y 800ms ease-in-out, height 800ms ease-in-out; }
+@media (prefers-reduced-motion: reduce) { .inner-pod, .pod-support { transition: none; } }
 svg { display: block; width: 100%; height: auto; }
 .leader { fill: none; stroke: #839587; stroke-width: 1.2; }
 .label { font-size: 13px; fill: #536655; font-family: Arial, sans-serif; }

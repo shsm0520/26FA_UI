@@ -1,25 +1,31 @@
 <script>
+  import PlanterPhone from './PlanterPhone.svelte'
   import PlanterModel from './PlanterModel.svelte'
   let cupHeight = 100
-  let waterLevel = 65
+  let waterLevel = 100
   let soilMoisture = 42
   let currentTemperature = 24
   let targetSoilMoisture = 100
   let podControlsVisible = false
   let elapsedHours = 0
+  let autoCare = false
+  let maintenanceMode = false
+  let paired = false
   function waterPlant() {
     waterLevel = 100
     checkWaterAndMovePod()
   }
   function advanceTime() {
     elapsedHours += 1
-    waterLevel = Math.max(0, waterLevel - 1)
+    waterLevel = Math.max(0, waterLevel - 8)
     soilMoisture = Math.max(0, soilMoisture - 5)
+    if (paired && autoCare && !maintenanceMode && waterLevel > 0) checkWaterAndMovePod()
   }
   function checkWaterAndMovePod() {
+    if (maintenanceMode) return
     // Concept simulation: higher water raises the pod; a higher moisture
     // target lowers it. Reserve travel for both inputs within 0–100%.
-    cupHeight = Math.round(waterLevel * 0.6 + (100 - targetSoilMoisture) * 0.4)
+    cupHeight = Math.min(100, Math.round(waterLevel + (100 - targetSoilMoisture) * 0.15))
     soilMoisture = waterLevel === 0 ? Math.max(0, soilMoisture - 10) : Number(targetSoilMoisture)
     podControlsVisible = true
   }
@@ -39,20 +45,12 @@
     <div class="phone-frame">
       <div class="phone-status" aria-hidden="true"><span>9:41</span><span>▰</span></div>
       <div class="phone-island" aria-hidden="true"></div>
-      <div class="phone-content">
-        <span class="eyebrow">MY PLANT</span>
-        <h3>Smart Planter</h3>
-        <p class="description">Check your plant's status.</p>
-        <div class="plant-symbol" aria-hidden="true">🌱</div>
+      <PlanterPhone bind:autoCare bind:maintenanceMode bind:paired onResumeCare={checkWaterAndMovePod} bind:targetSoilMoisture bind:waterLevel bind:soilMoisture bind:cupHeight bind:currentTemperature bind:elapsedHours bind:podControlsVisible>
         <dl class="readings" aria-live="polite">
-          <div><dt>Water Level</dt><dd>{waterLevel}%</dd></div>
-          <div><dt>Soil Moisture</dt><dd>{soilMoisture}%</dd></div>
           <div><dt>Target Moisture</dt><dd>{targetSoilMoisture}%</dd></div>
-          <div><dt>Current Temperature</dt><dd>{currentTemperature}°C</dd></div>
-          <div><dt>Plant Food</dt><dd>Needed</dd></div>
           <div><dt>Cup Height</dt><dd>{cupHeight}%</dd></div>
         </dl>
-      </div>
+      </PlanterPhone>
       <div class="home-indicator" aria-hidden="true"></div>
     </div>
   </section>
@@ -68,7 +66,7 @@
     <div class="action-buttons">
       <button onclick={waterPlant}>Water Plant</button>
       <button onclick={advanceTime}>Advance Time (+1h)</button>
-      <button onclick={checkWaterAndMovePod} aria-controls="pod-controls">Check Water Level and Move Inner Pod</button>
+      <button onclick={checkWaterAndMovePod} disabled={maintenanceMode} aria-controls="pod-controls">Check Water Level and Move Inner Pod</button>
     </div>
     <p class="description" aria-live="polite">Elapsed time: {elapsedHours} hours · Water level: {waterLevel}%</p>
     <p class="description">Watering: Fills water level to 100% and automatically moves the cup · Advancing 1 hour decreases water level by 1%.</p>
@@ -93,9 +91,6 @@ h2 { margin: 12px 0; font-size: 22px; color: #2c4135; }
 .phone-frame { width: 100%; aspect-ratio: 393 / 852; box-sizing: border-box; border: 9px solid #252725; border-radius: 52px; position: relative; background: #f7f9f3; box-shadow: 0 12px 30px #243e3014; overflow: hidden; }
 .phone-status { display: flex; justify-content: space-between; padding: 17px 25px; font-size: 13px; font-weight: bold; }
 .phone-island { position: absolute; width: 112px; height: 30px; border-radius: 20px; top: 10px; left: 50%; transform: translateX(-50%); background: #252725; }
-.phone-content { padding: 30px 24px 40px; }
-h3 { font-size: 27px; margin: 12px 0 8px; color: #2c4135; }
-.plant-symbol { text-align: center; font-size: 72px; padding: 22px 0; }
 .readings { margin: 0; }
 .readings div { display: flex; gap: 10px; justify-content: space-between; padding: 19px 0; border-bottom: 1px solid #e0e5dc; font-size: 14px; }
 dt { color: #69756b; } dd { margin: 0; font-weight: bold; color: #35533a; }
@@ -112,5 +107,5 @@ button:hover { background: #edf3e8; } button:disabled { opacity: .5; cursor: def
 .project-info { border-top: 1px solid #e0e5dc; margin-top: 24px; padding-top: 16px; color: #788574; font-size: 11px; line-height: 1.8; }
 a { color: #466b45; }
 @media (max-width: 1150px) { .starter-layout { grid-template-columns: minmax(0, 1fr) 340px; } .control-panel { grid-column: 1 / -1; } .action-buttons { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 760px) { .starter-layout { grid-template-columns: minmax(0, 1fr); } .phone-panel { width: min(100%, 393px); justify-self: center; } .control-panel { grid-column: auto; } .action-buttons { grid-template-columns: 1fr; } .phone-content { padding: 20px 20px 30px; } .plant-symbol { padding: 10px 0; font-size: 54px; } .readings div { padding: 14px 0; } }
+@media (max-width: 760px) { .starter-layout { grid-template-columns: minmax(0, 1fr); } .phone-panel { width: min(100%, 393px); justify-self: center; } .control-panel { grid-column: auto; } .action-buttons { grid-template-columns: 1fr; } .readings div { padding: 14px 0; } }
 </style>
