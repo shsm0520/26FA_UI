@@ -13,7 +13,7 @@
   </nav>
 
   <div hidden={activePage !== 'starter'}>
-    <SmartPlanter />
+    <SmartPlanter active={activePage === 'starter'} />
   </div>
 
   {#if activePage === 'document'}
