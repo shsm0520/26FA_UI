@@ -8,7 +8,7 @@
   let pdf
   let pageNumber = 1
   let pageCount = 0
-  let zoom = 1
+  let zoom = .7
   let busy = true
   let error = ''
   let renderTask
