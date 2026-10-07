@@ -1,6 +1,7 @@
 # Dependencies and build outputs
 node_modules/
 dist/
+/project1/public/documents/demo.mp4
 .svelte-kit/
 
 # Generated from the root icon2.png by Vite configuration.
