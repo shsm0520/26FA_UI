@@ -21,28 +21,34 @@
   let documentBody
   let navigationTarget = null
   let navigationFrame = 0
+  let navigatingTop = false
+  function destinationFor(top) {
+    const heading = !navigatingTop && navigationTarget ? document.getElementById(navigationTarget) : null
+    const requested = heading ? window.scrollY + heading.getBoundingClientRect().top - 24 : top
+    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+    return Math.max(0, Math.min(requested, max))
+  }
   function scrollToPosition(top) {
     cancelAnimationFrame(navigationFrame)
     // Stop any browser-owned smooth scroll before starting the newest request.
     window.scrollTo({ top: window.scrollY, behavior: 'instant' })
     const start = window.scrollY
-    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
-    const destination = Math.max(0, Math.min(top, max))
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      window.scrollTo({ top: destination, behavior: 'instant' })
+      window.scrollTo({ top: destinationFor(top), behavior: 'instant' })
       return
     }
     const started = performance.now()
     function animate(now) {
       const progress = Math.min(1, (now - started) / 320)
       const eased = 1 - Math.pow(1 - progress, 3)
-      window.scrollTo({ top: start + (destination - start) * eased, behavior: 'instant' })
+      window.scrollTo({ top: start + (destinationFor(top) - start) * eased, behavior: 'instant' })
       navigationFrame = progress < 1 ? requestAnimationFrame(animate) : 0
     }
     navigationFrame = requestAnimationFrame(animate)
   }
 
   function goTo(id) {
+    navigatingTop = false
     navigationTarget = id
     activeSection = id
     const heading = document.getElementById(id)
@@ -50,6 +56,7 @@
     if (heading) scrollToPosition(window.scrollY + heading.getBoundingClientRect().top - 24)
   }
   function toTop() {
+    navigatingTop = true
     navigationTarget = contents[0]?.id ?? null
     activeSection = navigationTarget
     pageTop?.focus({ preventScroll: true })
@@ -117,11 +124,20 @@
       onScroll()
     }
     refreshContents()
+    // PDFs and images can change section positions after a TOC click.
+    // Keep the selected heading aligned until the user starts navigating manually.
+    const layoutObserver = new ResizeObserver(() => {
+      if (navigationTarget && !navigationFrame) {
+        window.scrollTo({ top: destinationFor(0), behavior: 'instant' })
+      }
+    })
+    layoutObserver.observe(documentBody)
     const mutations = new MutationObserver(refreshContents)
     mutations.observe(documentBody, { childList: true, subtree: true, characterData: true })
     return () => {
       controller.abort()
       mutations.disconnect()
+      layoutObserver.disconnect()
       cancelAnimationFrame(frame)
       cancelAnimationFrame(navigationFrame)
       window.removeEventListener('scroll', onScroll)
