@@ -6,7 +6,7 @@
   const base = `${import.meta.env.BASE_URL}documents/`
   const sketchUrl = `${base}project1-sketch.pdf`
   // Place these files in public/documents to publish the media sections.
-  const videoUrl = `${base}demo.mp4`
+  const videoUrl = `${base}demo.mp4?v=319a284`
   const slidesUrl = `${base}presentation.pdf`
   const designMedia = [
     { title: '10 Minute Sketches', file: 'rapid-sketches.pdf', description: 'Alternatives for three challenges: feedback about water shortages, cup height adjustment, and the management interface. Highlighted ideas include a simple rim LED, phone notifications, a linear motion mechanism, and physical buttons alongside the phone UI.' },
